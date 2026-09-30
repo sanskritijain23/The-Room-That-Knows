@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Room That Knows</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main id="app">
+
+        <section id="welcome-screen">
+            <p class="eyebrow">A ROOM WITHOUT A NAME</p>
+            <h1>
+                The Room<br>
+                <span>That Knows</span>
+            </h1>
+
+            <p class="intro">
+                you did not find this room.
+                <br>
+                You needed it.
+            </p>
+            <button id="enter-btn">
+                Enter the Room
+                <span>→</span>
+            </button>
+            <p class="hint">Take your time.</p>
+        </section>
+
+        <section id="room-screen" class="hidden">
+            <div class="room-header">
+                <p class="eyebrow">THE ROOM</p>
+                <p id="room-time"></p>
+            </div>
+
+            <div id="room-content">
+                <div class="room-message">
+                    <p id="room-question">
+                        What brought you here?
+                    </p>
+
+                    <textarea id="need-input"
+                              placeholder="You can tell it anything..."
+                              rows="3">
+                    </textarea>
+
+                    <button id="submit-need">
+                        Tell the Room
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
