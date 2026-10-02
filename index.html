@@ -4,52 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Room That Knows</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap"
+        rel="stylesheet">
 </head>
-<body>
-    <main id="app">
+<body class="min-h-screen overflow-hidden bg-[#12100f] text-[#e8dfd2]"
+      style="
+      font-family: 'DM Sans', sans-serif;
+      background:
+      radial-gradient(
+            circle at 50% 45%,
+            rgba(120, 90, 60, 0.12),
+            transparent 35%
+        ),
+        #12100f;
+        ">
+    <main id="app" class="min-h-screen">
 
-        <section id="welcome-screen">
-            <p class="eyebrow">A ROOM WITHOUT A NAME</p>
-            <h1>
+        <section id="welcome-screen" class="relative flex min-h-screen flex-col items-center justify-center px-10 text-center transition-all duration-[900ms] ease-in-out"
+        >
+            <p class="mb-7 text-[11px] tracking-[4px] text-[#9b9185]">A ROOM WITHOUT A NAME</p>
+            <h1 class="text-[clamp(64px,9vw,120px)] font-normal leading-[0.82] tracking-[-3px]"
+                style="font-family: 'Cormorant Garamond', serif;">
                 The Room<br>
-                <span>That Knows</span>
+                <span class="italic text-[#b38b63]">That Knows</span>
             </h1>
 
-            <p class="intro">
+            <p class="mt-[45px] text-[22px] leading-[1.5] text-[#9b9185]"
+                style="font-family: 'Cormorant Garamond', serif;">
                 you did not find this room.
                 <br>
                 You needed it.
             </p>
-            <button id="enter-btn">
+            <button id="enter-btn" class="mt-[42px] border border-[rgba(232,223,210,0.15)] bg-transparent px-[22px] py-[14px] text-[13px] text-[#e8dfd2] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b38b63]">
                 Enter the Room
-                <span>→</span>
+                <span class="ml-3 text-[#b38b63]">→</span>
             </button>
-            <p class="hint">Take your time.</p>
+            <p class="absolute bottom-[30px] text-[11px] tracking-[1px] text-[#625b54]"
+            >Take your time.</p>
         </section>
 
-        <section id="room-screen" class="hidden">
-            <div class="room-header">
-                <p class="eyebrow">THE ROOM</p>
-                <p id="room-time"></p>
+        <section id="room-screen"
+            class="hidden h-screen w-full overflow-hidden px-[7vw] py-[45px]"
+            style="
+                background:
+                radial-gradient(
+                    circle at 50% 40%,
+                    rgba(179, 139, 99, 0.09),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    180deg,
+                    #0d0b0a 0%,
+                    #171311 100%
+                );
+            ">
+            <div class="flex items-center justify-between border-b border-[rgba(232,223,210,0.15)] py-5"
+            >
+                <p class="text-[11px] tracking-[4px] text-[#9b9185]">THE ROOM</p>
+                <p id="room-time" class="text-[12px] text-[#9b9185]"></p>
             </div>
 
-            <div id="room-content">
-                <div class="room-message">
-                    <p id="room-question">
+            <div id="room-content" class="flex h-[calc(100vh-130px)] items-center justify-center">
+                <div id="question-box"
+                    class="w-[min(600px,90vw)] text-center">
+                    <p id="room-question" class="text-[clamp(36px,5vw,58px)] leading-[1.1]"
+                        style="font-family: 'Cormorant Garamond', serif;"
+                    >
                         What brought you here?
                     </p>
 
                     <textarea id="need-input"
+                              rows="3"
                               placeholder="You can tell it anything..."
-                              rows="3">
+                              class="mt-[35px] w-full resize-none border-0 border-b border-[rgba(232,223,210,0.15)] bg-transparent p-[18px] text-[22px] text-[#e8dfd2] outline-none transition-colors duration-300 placeholder:text-[#625b54] focus:border-[#b38b63]"
+                              style="font-family: 'Cormorant Garamond', serif;">
                     </textarea>
 
-                    <button id="submit-need">
+                    <button id="submit-need" class="mt-[42px] border border-[rgba(232,223,210,0.15)] bg-transparent px-[22px] py-[14px] text-[13px] text-[#e8dfd2] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b38b63]"
+                    >
                         Tell the Room
-                        <span>→</span>
+                        <span class="ml-3 text-[#b38b63]">→</span>
                     </button>
                 </div>
+                
             </div>
         </section>
     </main>
