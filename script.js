@@ -15,6 +15,7 @@ const roomResponses = {
     lost: "Perhaps being lost is why you found this room."
 };
 const exploreObjects = document.getElementById("explore-object");
+const leaveObject = document.getElementById("leave-object");
 
 submitNeed.addEventListener("click", function () {
 
@@ -69,6 +70,22 @@ enterButton.addEventListener("click",function(){
 
 exploreObjects.addEventListener("click", function (){
     const photographClue = document.getElementById("photograph-clue");
-    photographClue.textContent = "On the back, someone has written: \"Some rooms remember what people forget.\"";
-    exploreObjects.textContent = "Keep the photograph";
+    if (exploreObjects.dataset.action !== "keep"){
+        photographClue.textContent = "On the back, someone has written: \"Some rooms remember what people forget.\"";
+        exploreObjects.textContent = "Keep the photograph";
+        exploreObjects.dataset.action = "keep";
+    }
+    else{
+        roomResponse.textContent = "You take the photograph. the Room does not seem to mind";
+        firstObject.classList.add("opacity-60");
+        exploreObjects.disabled = true;
+        leaveObject.disabled = true;
+    }
 });
+
+leaveObject.addEventListener("click", function (){
+    roomResponse.textContent = "You leave the photograph where you found it.";
+    firstObject.classList.add("opacity-60");
+    exploreObjects.disabled = true;
+    leaveObject.disabled = true;
+} );
