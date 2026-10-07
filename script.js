@@ -42,8 +42,11 @@ let roomMemory = {
     visited: false,
     need: "",
     objectId: "",
-    objectState: "unknown"
+    objectState: "unknown",
+    memories: []
 };
+const memoryPanel = document.getElementById("memory-panel");
+const memoryList = document.getElementById("memory-list");
 const exploreObjects = document.getElementById("explore-object");
 const objectCard = document.getElementById("object-card");
 const leaveObject = document.getElementById("leave-object");
@@ -62,44 +65,62 @@ submitNeed.addEventListener("click", function () {
     }
 
     roomMemory.visited = true;
-    roomMemory.need = userNeed;
-    saveMemory();
-
+    const alreadyRemembered = roomMemory.memories.some(
+        memory => memory.text.toLowerCase() === userNeed.toLowerCase()
+    );
+    if (!alreadyRemembered) {
+        roomMemory.memories.push({
+            id: Date.now(),
+            text: userNeed
+        });
+    }
+    const message = userNeed.toLowerCase();
     questionBox.classList.add("hidden");
     responseBox.classList.remove("hidden");
 
-    const message = userNeed.toLowerCase();
     const foundObject = roomObjects.find(object =>
         message.includes(object.need)
     );
-    console.log(foundObject);
+
     if (foundObject) {
+
         roomMemory.objectId = foundObject.id;
         roomMemory.objectState = "unknown";
+
         objectType.textContent = foundObject.name.toUpperCase();
         objectName.textContent = foundObject.name;
         objectDescription.textContent = foundObject.description;
         objectClue.textContent = foundObject.clue;
-        saveMemory();
-    }
-    if (message.includes("lonely")){
-        roomResponse.textContent = roomResponses.lonely;
 
+        exploreObjects.textContent = "Turn it over";
+        exploreObjects.dataset.action = "";
+        exploreObjects.disabled = false;
+        leaveObject.disabled = false;
+
+        firstObject.classList.remove("hidden");
+    } 
+    else {
+        firstObject.classList.add("hidden");
     }
-    else if (message.includes("tired")){
+
+    if (message.includes("lonely")) {
+        roomResponse.textContent = roomResponses.lonely;
+    }
+    else if (message.includes("tired")) {
         roomResponse.textContent = roomResponses.tired;
     }
-    else if (message.includes("confused")){
+    else if (message.includes("confused")) {
         roomResponse.textContent = roomResponses.confused;
     }
-    else if (message.includes("lost")){
+    else if (message.includes("lost")) {
         roomResponse.textContent = roomResponses.lost;
     }
-    else{
-        roomResponse.textContent = "The Room heard you. Perhaps you should look around.";
+    else {
+        roomResponse.textContent =
+            "The Room heard you. Perhaps you should look around.";
     }
 
-    firstObject.classList.remove("hidden");
+    saveMemory();
 });
 
 enterButton.addEventListener("click",function(){
@@ -109,22 +130,8 @@ enterButton.addEventListener("click",function(){
         welcomeScreen.style.display = "none";
         roomScreen.classList.remove("hidden");
         if (roomMemory.visited) {
-            questionBox.classList.add("hidden");
-            responseBox.classList.remove("hidden");
-            roomResponse.textContent = `You have been here before. The Room remembers what brought you here: "${roomMemory.need}" ${getMemoryMessage()}`;
-            if (roomMemory.objectId) {
-                const previousObject = roomObjects.find(
-                    object => object.id === roomMemory.objectId
-                );
-                if (previousObject) {
-                    objectType.textContent = previousObject.name.toUpperCase();
-                    objectName.textContent = previousObject.name;
-                    objectDescription.textContent = previousObject.description;
-                    objectClue.textContent = previousObject.clue;
-                    firstObject.classList.remove("hidden");
-                }
-            }
-            
+            showMemories();
+            roomResponse.textContent = "The Room remembers you.";
         }
         const now = new Date();
         const time = now.toLocaleTimeString([], {
@@ -167,6 +174,9 @@ exploreObjects.addEventListener("click", function () {
 
         exploreObjects.disabled = true;
         leaveObject.disabled = true;
+        questionBox.classList.remove("hidden");
+        responseBox.classList.add("hidden");
+        needInput.value = "";
     }
 });
 
@@ -191,13 +201,67 @@ leaveObject.addEventListener("click", function () {
 
     exploreObjects.disabled = true;
     leaveObject.disabled = true;
+    questionBox.classList.remove("hidden");
+    responseBox.classList.add("hidden");
+    needInput.value = "";
 });
+
+function showMemories() {
+
+    memoryList.innerHTML = "";
+
+    if (!roomMemory.memories || roomMemory.memories.length === 0) {
+        memoryPanel.classList.add("hidden");
+        return;
+    }
+
+    memoryPanel.classList.remove("hidden");
+
+    roomMemory.memories.forEach(memory => {
+
+        const memoryItem = document.createElement("div");
+
+        memoryItem.className =
+            "group flex items-start justify-between gap-3 border-b border-[rgba(232,223,210,0.08)] pb-4";
+
+        memoryItem.innerHTML = `
+            <p class="text-sm leading-relaxed text-[#9b9185]"
+               style="font-family: 'Cormorant Garamond', serif;">
+                ${memory.text}
+            </p>
+
+            <button
+                class="memory-delete shrink-0 text-xs text-[#625b54] opacity-0 transition-opacity duration-300 group-hover:opacity-100 hover:text-[#b38b63]"
+                data-id="${memory.id}">
+                ×
+            </button>
+        `;
+
+        memoryList.appendChild(memoryItem);
+    });
+
+    document.querySelectorAll(".memory-delete").forEach(button => {
+
+        button.addEventListener("click", function () {
+
+            const memoryId = Number(this.dataset.id);
+
+            roomMemory.memories =
+                roomMemory.memories.filter(
+                    memory => memory.id !== memoryId
+                );
+
+            saveMemory();
+        });
+    });
+}
 
 function saveMemory(){
     localStorage.setItem(
         "roomMemory",
         JSON.stringify(roomMemory)
     );
+    showMemories();
 }
 
 function getMemoryMessage() {
@@ -223,8 +287,15 @@ function getMemoryMessage() {
 
 function loadMemory() {
     const savedMemory = localStorage.getItem("roomMemory");
-    if(savedMemory) {
+
+    if (savedMemory) {
         roomMemory = JSON.parse(savedMemory);
+
+        if (!roomMemory.memories) {
+            roomMemory.memories = [];
+        }
     }
 }
+
 loadMemory();
+showMemories();
